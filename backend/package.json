@@ -1,8 +1,10 @@
 {
   "dependencies": {
+    "@ilovepdf/ilovepdf-nodejs": "^0.2.1",
     "@passageidentity/passage-node": "^1.11.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.0",
+    "encrypt-decrpt-pdf": "^1.0.11",
     "express": "^4.17.3"
   }
 }
