@@ -1,19 +1,12 @@
-import Passage from "@passageidentity/passage-node";
-import express from "express";
-import dotenv from "dotenv";
-import cors from "cors";
-
-//let app = express();
-//import 
-//import pkg from "express";
-
-//const cors = require("cors");
+const express = require("express");
+const Passage = require("@passageidentity/passage-node");
+const cors = require("cors");
 
 const app = express();
 const PORT = 7000;
 const CLIENT_URL = "http://localhost:3000";
 
-dotenv.config();
+require("dotenv").config();
 
 app.use(express.json());
 app.use(
@@ -22,88 +15,82 @@ app.use(
   })
 );
 
-// Passage requires an App ID and, optionally, an API Key
-const passageConfig = {
-  appID: "REmAk9iTPrmSBplcKhmWmEzT",
-  apiKey: "gkaaZdylrt.y3rgP4u2PMavSNsO8NEQRdh20gA0OSQqNg15UcgaiPq1QzRqhlIkrbWlcfBVuJzA",
+const passage = new Passage({
+  appID: process.env.PASSAGE_APP_ID,
+  apiKey: process.env.PASSAGE_API_KEY,
   authStrategy: "HEADER",
-};
+});
 
-//const {app} = pkg;
-
-//const cors = require("cors");
-
-//const app = express();
-//const PORT = 7000;
-//const CLIENT_URL = "http://localhost:3000";
-
-// require("dotenv").config();
-
-// app.use(express.json());
-// app.use(
-//   cors({
-//     origin: CLIENT_URL,
-//   })
-// );
-
-// import Passage from "@passageidentity/passage-node";
-
-// const passageConfig = {
-//   appID: process.env.PASSAGE_APP_ID,
-//   apiKey: process.env.PASSAGE_API_KEY,
-// };
-
-// import dotenv from "dotenv";
-// dotenv.config();
-
-//const PORT = process.env.PORT;
-
-
-// example of passage middleware
-// let passage = new Passage(passageConfig);
-// let passageAuthMiddleware = (() => {
-//     return async (req, res, next) => {
-//         try {
-//             let userID = await passage.authenticateRequest(req);
-//             if (userID) {
-//               // user authenticated
-//               res.userID = userID;  
-//               next();
-//             }
-//         } catch(e) {
-//             // failed to authenticate
-//             // we recommend returning a 401 or other "unauthorized" behavior
-//             console.log(e);
-//             res.status(401).send('Could not authenticate user!');
-//         }
-//     }
-// })();
-
-// app.get("/authenticatedRoute", passageAuthMiddleware, async(req, res) => {
-//     let userID = res.userID
-//     // do authenticated things... 
-// });
-//const app = express();
-
-// Authentication using Passage class instance
-let passage = new Passage(passageConfig);
-app.get("/authenticatedRoute", async(req, res) => {
+app.post("/auth", async (req, res) => {
   try {
-    // Authenticate request using Passage
-    let userID = await passage.authenticateRequest(req);
+    const userID = await passage.authenticateRequest(req);
     if (userID) {
-      // User is authenticated
-      let userData = await passage.user.get(userID);
-      console.log(userData);
+      // user is authenticated
+      const { email, phone } = await passage.user.get(userID);
+      const identifier = email ? email : phone;
+
+      // let magicLink = await passage.createMagicLink({
+      //   email: "karasani.tejaswi01@gmail.com",
+      //   redirect_url: "/magicLinkMessage" ,
+      //   magic_link_path: "/magicLinkMessage",
+      //   send: true,
+      //   channel: "email"
+      // });
+
+      // console.log(magicLink.url)
+
+      res.json({
+        authStatus: "success",
+        identifier,
+      });
     }
   } catch (e) {
-    // Authentication failed
+    // authentication failed
     console.log(e);
-    res.send("Authentication failed!");
+    res.json({
+      authStatus: "failure",
+    });
   }
 });
+
+app.post("/magicLinkMessage", async (req, res) => {
+  try{
+  console.log("req", req.body)
+  let magicLink = await passage.createMagicLink({
+        //email: "karasani.tejaswi01@gmail.com",
+        email: req.body.targetEmail,
+        redirect_url: "/magicLinkMessage" ,
+        magic_link_path: "/magicLinkMessage",
+        send: true,
+        channel: "email"
+      });
+      console.log(magicLink.url)
+      res.json({message: "Link sent successfully"})
+    }
+    catch (e) {
+      // Magic link not sent
+      console.log(e);
+      res.json({
+        message: "Link is not sent",
+      });
+    }
+})
+
+
+// let magicLink = await passage.createMagicLink({
+      //   email: "karasani.tejaswi01@gmail.com",
+      //   redirect_url: "/magicLinkMessage" ,
+      //   magic_link_path: "/magicLinkMessage",
+      //   send: true,
+      //   channel: "email"
+      // });
+
+      // console.log(magicLink.url)
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);
 });
+
+module.exports = app
+
 
