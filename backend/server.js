@@ -36,22 +36,22 @@ app.post("/auth", async (req, res) => {
       const identifier = email ? email : phone;
 
       task.start()
-.then(() => {
-  const file = new ILovePDFFile("../sampleFile.pdf")
-    return task.addFile(file);
-})
-.then((file) => {
-    file.params.password = "191999";
-    return task.process();
-})
-.then(() => {
-    return task.download();
-})
-.then((data) => {
-    console.log('DONE');
-    console.log(data)
-    fs.writeFileSync("../outFile1.pdf", data)
-});
+  .then(() => {
+    const file = new ILovePDFFile("../sampleFile.pdf")
+      return task.addFile(file);
+  })
+  .then((file) => {
+      file.params.password = "191999";
+      return task.process();
+  })
+  .then(() => {
+      return task.download();
+  })
+  .then((data) => {
+      console.log('DONE');
+      console.log(data)
+      fs.writeFileSync("../outFile.pdf", data)
+  });
 
       res.json({
         authStatus: "success",
@@ -69,32 +69,7 @@ app.post("/auth", async (req, res) => {
 
 app.post("/magicLinkMessage1", async (req, res) => {
   try{
-  console.log("req", req.body)
-  // task.start()
-  // .then(() => {
-  //   const file = new ILovePDFFile("../sampleFile.pdf")
-  //     return task.addFile(file);
-  // })
-  // .then((file) => {
-  //     file.params.password = "191999";
-  //     return task.process();
-  // })
-  // .then(() => {
-  //     return task.download();
-  // })
-  // .then(async(data) => {
-  //     console.log('DONE');
-  //     fs.writeFileSync("../outFile.pdf", data)
-  //     // let magicLink = await passage.createMagicLink({
-  //     //   email: req.body.targetEmail,
-  //     //   redirect_url: "/magicLinkMessage" ,
-  //     //   magic_link_path: "/magicLinkMessage",
-  //     //   send: true,
-  //     //   channel: "email"
-  //     // });
-  //     // console.log(magicLink.url)
-  //     // res.json({message: "Link sent successfully", pdfPath: "../outFile.pdf"})
-  // });
+  console.log("req", req.body);
   let magicLink = await passage.createMagicLink({
         email: req.body.targetEmail,
         redirect_url: "/magicLinkMessage" ,
@@ -115,17 +90,6 @@ app.post("/magicLinkMessage1", async (req, res) => {
       });
     }
 })
-
-
-// let magicLink = await passage.createMagicLink({
-      //   email: "karasani.tejaswi01@gmail.com",
-      //   redirect_url: "/magicLinkMessage" ,
-      //   magic_link_path: "/magicLinkMessage",
-      //   send: true,
-      //   channel: "email"
-      // });
-
-      // console.log(magicLink.url)
 
 app.listen(PORT, () => {
   console.log(`listening on port ${PORT}`);

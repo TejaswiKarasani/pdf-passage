@@ -4,3 +4,9 @@ body {
   font-family: sans-serif;
   background-color: #E5E5E5;
 }
+
+:root {
+  --passage-primary-color: #3c0949;
+  /* ... more variables ... */
+}
+

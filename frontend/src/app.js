@@ -3,7 +3,6 @@ import { Routes, Route } from 'react-router-dom';
 import Home from "./views/Home";
 import Dashboard from "./views/Dashboard";
 import MagicLinkMessage from "./views/MagicLinkMessage";
-import PdfReader from "./views/PdfReader";
 import Banner from "./components/banner";
 import styles from './styles/App.module.css';
 
@@ -16,11 +15,7 @@ function App() {
                     <Route path="/" element={<Home/>}></Route>
                     <Route path="/dashboard" element={<Dashboard/>}></Route>
                     <Route path="/magicLinkMessage" element={<MagicLinkMessage/>}></Route> 
-                    <Route path="/pdfReader" element={<PdfReader/>}></Route>
                 </Routes>
-            </div>
-            <div className={styles.footer}>
-                Learn more with our <a href="https://docs.passage.id">Documentation</a> and <a href="https://github.com/passageidentity">Github</a>.      
             </div>
       </div>
   );
