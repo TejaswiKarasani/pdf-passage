@@ -5,7 +5,6 @@ const fs = require("fs");
 const ILovePDFApi = require('@ilovepdf/ilovepdf-nodejs');
 const ILovePDFFile = require('@ilovepdf/ilovepdf-nodejs/ILovePDFFile');
 
-const instance = new ILovePDFApi('project_public_f72f346aea6cb487650e68b2a054ef66_-WRcg1ff1dc7cc293ee2495be2a35424e7263', 'secret_key_2a6c4d02413bc4e267ed9ec7c7e44bb8_GEdTF5858a8801016d9aaf8c8e052c95fc32c');
 const task = instance.newTask('unlock');
 
 const app = express();
